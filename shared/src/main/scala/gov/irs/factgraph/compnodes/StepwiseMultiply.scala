@@ -36,4 +36,7 @@ object StepwiseMultiply extends CompNodeFactory:
 
 final private class StepwiseMultiplyOperator extends BinaryOperator[Dollar, Dollar, Rational]:
   override protected def operation(x: Dollar, y: Rational): Dollar =
-    Dollar(x.intValue / y.denominator * y.numerator)
+    // Preserve raw denominator-sized steps, including the intentional discard of fractional dollars.
+    val whole = BigInt(x.asInstanceOf[BigDecimal].bigDecimal.toBigInteger)
+    val result = whole / y.denominatorExact * y.numeratorExact
+    Dollar(BigDecimal(new java.math.BigDecimal(result.bigInteger)))

@@ -25,9 +25,8 @@ object Ceiling extends CompNodeFactory:
       case _               => throw new UnsupportedOperationException(s"invalid child type: ${e.typeName}")
 
 final private class RationalCeilingOperator extends UnaryOperator[Int, Rational]:
-  override protected def operation(x: Rational): Int = (BigDecimal(x.numerator) / BigDecimal(x.denominator))
-    .setScale(0, RoundingMode.CEILING)
-    .intValue()
+  override protected def operation(x: Rational): Int =
+    Rational.checkedInt(BigInt(x.decimal(0, java.math.RoundingMode.CEILING).bigDecimal.toBigIntegerExact))
 
 final private class IntegerCeilingOperator extends UnaryOperator[Int, Int]:
   override protected def operation(x: Int): Int = x

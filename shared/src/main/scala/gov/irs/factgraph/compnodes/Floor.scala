@@ -24,7 +24,8 @@ object Floor extends CompNodeFactory:
       case _               => throw new UnsupportedOperationException(s"invalid child type: ${e.typeName}")
 
 final private class RationalFloorOperator extends UnaryOperator[Int, Rational]:
-  override protected def operation(x: Rational): Int = (x.numerator.toFloat / x.denominator).floor.toInt
+  override protected def operation(x: Rational): Int =
+    Rational.checkedInt(BigInt(x.decimal(0, java.math.RoundingMode.FLOOR).bigDecimal.toBigIntegerExact))
 
 final private class IntegerFloorOperator extends UnaryOperator[Int, Int]:
   override protected def operation(x: Int): Int = x

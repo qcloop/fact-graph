@@ -33,12 +33,15 @@ ci_format_check:
 # --- Testing ---
 
 test:
-	sbt test
+	sbt test 'factGraphJS/fastLinkJS'
+	node js/src/test/javascript/rational-exports.mjs
 
 # Once we upgrade to the next 3.x.x LTS version, Change this to 
 # sbt -info 'set Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-oC")' test
 ci_test:
-	sbt -error test && echo 'All tests passed.'
+	sbt -error test 'factGraphJS/fastLinkJS'
+	node js/src/test/javascript/rational-exports.mjs
+	@echo 'All tests passed.'
 
 # --- Security Scanning ---
 

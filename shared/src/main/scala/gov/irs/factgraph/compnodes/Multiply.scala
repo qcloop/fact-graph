@@ -164,14 +164,6 @@ private object MultiplyBinaryOperator:
   implicit val intRationalOperator: MultiplyBinaryOperator[Rational, Int, Rational] =
     (lhs: Int, rhs: Rational) => Numeric[Rational].times(lhs, rhs)
   implicit val dollarRationalOperator: MultiplyBinaryOperator[Dollar, Dollar, Rational] =
-    (lhs: Dollar, rhs: Rational) =>
-      Fractional[Dollar].div(
-        Numeric[Dollar].times(lhs, rhs.numerator),
-        rhs.denominator,
-      )
+    (lhs: Dollar, rhs: Rational) => Dollar.multiplyRational(lhs, rhs)
   implicit val rationalDollarOperator: MultiplyBinaryOperator[Dollar, Rational, Dollar] =
-    (lhs: Rational, rhs: Dollar) =>
-      Fractional[Dollar].div(
-        Numeric[Dollar].times(rhs, lhs.numerator),
-        lhs.denominator,
-      )
+    (lhs: Rational, rhs: Dollar) => Dollar.multiplyRational(rhs, lhs)

@@ -38,8 +38,5 @@ object TruncateCents extends CompNodeFactory:
 
 final private class TruncateOperator extends UnaryOperator[Rational, Rational]:
   override protected def operation(x: Rational): Rational =
-    val value = (BigDecimal(x.numerator) / BigDecimal(x.denominator))
-      .setScale(2, scala.math.BigDecimal.RoundingMode.DOWN)
-    val numerator = value.bigDecimal.unscaledValue().intValue()
-    val denominator = BigDecimal(10).pow(value.scale).intValue
-    Rational(numerator, denominator).simplify
+    val value = x.decimal(2, java.math.RoundingMode.DOWN)
+    Rational.exact(BigInt(value.bigDecimal.unscaledValue()), BigInt(100)).simplify

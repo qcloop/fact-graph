@@ -202,3 +202,41 @@ class RationalSpec extends AnyFunSpec:
       }
     }
   }
+
+  describe("exact arithmetic regression cases") {
+    it("keeps mileage allocation and annualization products exact") {
+      assert((Rational(16366) * Rational(181, 365) * Rational(725, 1000)).toString == "42952567/7300")
+      assert((Rational(2671001) * Rational(67, 100) * Rational(12)).toString == "536871201/25")
+    }
+    it("handles minimum Int signs and denominator normalization") {
+      assert(Rational(1, Int.MinValue).simplify.toString == "-1/2147483648")
+      assert(Rational(Int.MinValue, -1).simplify.toString == "2147483648/1")
+      assert(Numeric[Rational].negate(Rational(Int.MinValue)).toString == "2147483648/1")
+    }
+    it("compares signed denominators without cross-product overflow") {
+      assert(Rational(1, -2) < Rational(1, 2))
+      assert(Rational(Int.MaxValue, 2) > Rational(Int.MaxValue, 3))
+    }
+    it("roundtrips wide components through the persister JSON") {
+      import gov.irs.factgraph.persisters.{ RationalWrapper, TypeContainer }
+      import upickle.default.{ read, write }
+      val value = Rational("123456789012345678901234567890/365")
+      val wrapped: TypeContainer = RationalWrapper(value)
+      assert(read[TypeContainer](write(wrapped)) == wrapped)
+      assert(write(Rational(29, 40)) == """{"n":29,"d":40}""")
+    }
+  }
+
+  describe("strict rational input") {
+    it("rejects trailing line terminators instead of partially parsing") {
+      for (suffix <- Seq("\n", "\r", "\r\n")) {
+        assert(Numeric[Rational].parseString("1/2" + suffix).isEmpty)
+        assertThrows[NumberFormatException](Rational("1/2" + suffix))
+      }
+    }
+    it("rejects fractional or unsafe JSON numbers and zero denominators") {
+      import upickle.default.read
+      for (json <- Seq("""{"n":1.5,"d":2}""", """{"n":1,"d":0}""", """{"n":10000000000000000,"d":1}"""))
+        assertThrows[Exception](read[Rational](json))
+    }
+  }

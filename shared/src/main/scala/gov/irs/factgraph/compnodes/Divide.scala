@@ -159,14 +159,6 @@ private object DivideBinaryOperator:
   implicit val rationalIntOperator: DivideBinaryOperator[Rational, Rational, Int] =
     (lhs: Rational, rhs: Int) => Fractional[Rational].div(lhs, rhs)
   implicit val dollarRationalOperator: DivideBinaryOperator[Dollar, Dollar, Rational] =
-    (lhs: Dollar, rhs: Rational) =>
-      Fractional[Dollar].div(
-        Numeric[Dollar].times(lhs, rhs.denominator),
-        rhs.numerator,
-      )
+    (lhs: Dollar, rhs: Rational) => Dollar.multiplyRational(lhs, rhs.reciprocal)
   implicit val rationalDollarOperator: DivideBinaryOperator[Dollar, Rational, Dollar] =
-    (lhs: Rational, rhs: Dollar) =>
-      Fractional[Dollar].div(
-        lhs.numerator,
-        Numeric[Dollar].times(rhs, lhs.denominator),
-      )
+    (lhs: Rational, rhs: Dollar) => Dollar.divideRationalByDollar(lhs, rhs)

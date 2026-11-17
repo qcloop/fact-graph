@@ -52,13 +52,28 @@ extension (x: Dollar)
 
 given Conversion[Int, Dollar] = Dollar.DollarIsFractional.fromInt(_)
 given Conversion[Rational, Dollar] with
-  def apply(rat: Rational): Dollar = Dollar(
-    BigDecimal(rat.numerator.toFloat / rat.denominator),
-  )
+  def apply(rat: Rational): Dollar = Dollar(rat.decimal(2, java.math.RoundingMode.HALF_EVEN))
 
 object Dollar:
   private val Scale = 2
   private val RoundingMode = scala.math.BigDecimal.RoundingMode.HALF_EVEN
+
+  /** Keep wide rational components exact until the final cents rounding. */
+  private[factgraph] def multiplyRational(value: Dollar, rate: Rational): Dollar =
+    val numerator = value
+      .asInstanceOf[BigDecimal]
+      .bigDecimal
+      .multiply(new java.math.BigDecimal(rate.numeratorExact.bigInteger))
+    val denominator = new java.math.BigDecimal(rate.denominatorExact.bigInteger)
+    Dollar(BigDecimal(numerator.divide(denominator, Scale, java.math.RoundingMode.HALF_EVEN)))
+
+  private[factgraph] def divideRationalByDollar(rate: Rational, value: Dollar): Dollar =
+    val numerator = new java.math.BigDecimal(rate.numeratorExact.bigInteger)
+    val denominator = value
+      .asInstanceOf[BigDecimal]
+      .bigDecimal
+      .multiply(new java.math.BigDecimal(rate.denominatorExact.bigInteger))
+    Dollar(BigDecimal(numerator.divide(denominator, Scale, java.math.RoundingMode.HALF_EVEN)))
 
   /** String representations meet all the following requirements:
     *   - At least one non-fractional digit

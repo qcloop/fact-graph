@@ -50,6 +50,4 @@ object AsDecimalString extends CompNodeFactory:
 
 final private class RationalAsDecimalString(val scale: Int) extends UnaryOperator[String, Rational]:
   override protected def operation(x: Rational): String =
-    (BigDecimal(x.numerator) / BigDecimal(x.denominator))
-      .setScale(scale, BigDecimal.RoundingMode.HALF_UP)
-      .toString()
+    x.decimal(scale, java.math.RoundingMode.HALF_UP).toString()

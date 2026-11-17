@@ -72,3 +72,9 @@ class FloorSpec extends AnyFunSpec:
       assert(node.get(0) == Result.Complete(-11.0))
     }
   }
+
+  describe("exact large rational flooring") {
+    it("does not round through Float before flooring") {
+      assert(Floor(RationalNode(gov.irs.factgraph.types.Rational("16777219/1"))).get(0) == Result.Complete(16777219))
+    }
+  }

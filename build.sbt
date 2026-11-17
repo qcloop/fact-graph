@@ -1,7 +1,7 @@
 import org.scalajs.linker.interface.OutputPatterns
 
 val projectName = "factgraph"
-val factGraphVersion = "3.1.0-SNAPSHOT"
+val factGraphVersion = "3.1.1"
 val scala3Version = "3.3.6"
 
 scalafmtConfig := file(".scalafmt.conf")
@@ -43,7 +43,9 @@ lazy val factGraph = crossProject(JSPlatform, JVMPlatform)
     Test / testOptions += Tests.Argument("-oI")
   )
   .jvmSettings(
-    libraryDependencies += "org.scala-js" %% "scalajs-stubs" % "1.1.0" % "provided"
+    libraryDependencies += "org.scala-js" %% "scalajs-stubs" % "1.1.0" % "provided",
+    // The JNA frontend supports the engine's Java 21 build; property testing stays JVM/test-only.
+    libraryDependencies += "dev.hegel" % "hegel-jna" % "0.12.5" % Test
   )
   .jsSettings(
   )

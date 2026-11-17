@@ -11,6 +11,50 @@ See [ONBOARDING.md](ONBOARDING.md) for environment/developer setup.
 See [the Fact Graph 3.1 ADR](docs/fact-graph-3.1-adr.md) for more information about the fact graph and how it has been changed since early 2025
 See [here](docs/from-3.0-to-3.1.md) for a brief description of changes between the older versions of the Fact Graph and the current v3.1 in this repository 
 
+## Exact rational arithmetic
+
+Rational numerators and denominators use arbitrary-precision integers internally. Arithmetic and
+ordering must not wrap before fraction reduction. Supplied fractions stay unreduced: same-denominator
+addition/subtraction preserve their denominator, and `StepwiseMultiply` intentionally uses the raw
+rate's denominator as its step size. Case-class equality remains representation-based.
+
+The existing `new Rational(Int, Int)`, `RationalFactory` exports, Int factory overloads and Int
+component accessors remain available. An Int accessor or integer rounding result outside the Int
+range throws `ArithmeticException` instead of wrapping. Fraction strings and `toString` support wide
+components. Rebuild consumers after upgrading; the internal Scala case-class representation changed.
+
+Persistence retains numeric `n`/`d` fields for Int-sized components. Wider components serialize as
+base-10 strings so JavaScript JSON numbers cannot lose precision; the reader accepts legacy numeric
+components and exact wide strings. Every reader of a newly persisted wide fraction needs the updated
+engine. Dollar conversion and mixed arithmetic round the exact ratio to cents with HALF_EVEN;
+Floor/Ceiling, cent truncation and decimal formatting use their documented rounding modes.
+
+Validate and publish the JVM dependency to the local Maven repository before building a consumer:
+
+```sh
+make format_check test
+sbt 'factGraphJVM/publishM2'
+```
+
+The JVM suite includes 23 Hegel properties with 3,000-case budgets (JNA, test scope only, Java 17+).
+Generators cover full Int components and signed fractions materialized up to 256 bits. Shared
+regressions run on both JVM and JavaScript; a separate 200,000-bit probe checks bulk arithmetic,
+formatting, hashing and JSON. Existing tests cover the remaining primitive-conversion rejections.
+An independent implementation-only review supplied the signed-denominator, raw-rate, persistence,
+rounding and currency-bridge contracts.
+
+Failure ledger for the rational arithmetic fix (2026-11-17):
+
+- Fixed unchecked Int multiplication/addition/comparison, including the mileage products
+  `16366 * 181 * 725` and `2671001 * 67 * 12`, signed denominators and Int.MinValue normalization.
+- Removed Float/narrowing conversions in rational consumers and retained raw stepwise semantics.
+- Fixed a reproduced parser bug: the regex could accept a valid prefix before a final line terminator.
+- Harness correction: property node evaluation requires importing the shared `Factual` test given.
+- Integration correction: Scala.js class exports require a protected/public primary constructor.
+  Moving the annotation to a secondary constructor compiled but omitted the JavaScript export; a plain
+  JavaScript smoke check caught it. The primary constructor is protected, the Int constructor remains
+  public, and `make test` / `make ci_test` now check the real module's constructor and factory exports.
+
 ## Contributing
 See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
