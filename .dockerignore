@@ -1,0 +1,14 @@
+# Build outputs and IDE/tooling caches — not needed for the Docker factgraph build.
+# The direct-file Dockerfiles only COPY js/src, jvm/src, shared/, build.sbt and
+# project/{build.properties,plugins.sbt} from this context.
+**/target/
+.bloop/
+.metals/
+.bsp/
+.git/
+.github/
+.vscode/
+.idea/
+demo/
+docs/
+.DS_Store
