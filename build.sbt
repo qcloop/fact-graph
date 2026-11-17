@@ -1,7 +1,7 @@
 import org.scalajs.linker.interface.OutputPatterns
 
 val projectName = "factgraph"
-val factGraphVersion = "3.1.1-SNAPSHOT"
+val factGraphVersion = "3.1.1"
 val scala3Version = "3.3.6"
 
 scalafmtConfig := file(".scalafmt.conf")
