@@ -58,6 +58,10 @@ Failure ledger for the rational arithmetic fix (2026-11-17):
 ## Contributing
 See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
+## Releasing
+See the [TaxAdvisor release process](docs/RELEASING.md) for Fact Graph publication,
+calculator and web releases, AWS promotion, and recovery.
+
 ## Repository Update Frequency 
 
 This repository is updated frequently. Development occurs in a private repository and approved changes to `main` are pushed to this repository in real-time.
