@@ -11,6 +11,54 @@ See [ONBOARDING.md](ONBOARDING.md) for environment/developer setup.
 See [the Fact Graph 3.1 ADR](docs/fact-graph-3.1-adr.md) for more information about the fact graph and how it has been changed since early 2025
 See [here](docs/from-3.0-to-3.1.md) for a brief description of changes between the older versions of the Fact Graph and the current v3.1 in this repository 
 
+## Compliance and checklist examples
+
+Fact Graph can calculate policy requirements as well as tax amounts. A supplied
+answer may be complete and still fail a requirement: an expired training date is
+valid input, while a requirement for current training fails.
+
+The [security-training example](demo/compliance.xml) uses an explicit `/asOf`
+date, writable answers, a derived Boolean, and a named check:
+
+```js
+const dictionary = fg.FactDictionaryFactory.importFromXml(xml);
+const graph = fg.GraphFactory.apply(dictionary);
+graph.set('/asOf', '2026-11-20');
+graph.set('/isEmployee', 'true');
+graph.set('/trainingExpiresOn', '2026-10-31'); // Accepted input; policy fails.
+const results = graph.check();
+// [{ id: 'security-training-required', status: 'fail', ... }]
+```
+
+An unanswered date produces `undetermined`; a confirmed non-employee produces
+`notApplicable`. A date on or after `/asOf` produces `pass`. Checks report findings
+without blocking writes or saving the graph. See the [check contract and XML
+syntax](docs/fact-dictionary-specification-3.1.md#policy-checks).
+
+Writable limits also accept `level="Warn"`. In JavaScript, `graph.set()` returns
+these in its `warnings` array while `errorType` stays `null` on a successful write.
+Errors continue to reject the write. Check every setter's return value.
+
+To run the browser demos, build the module, copy it, and serve the repository root:
+
+```sh
+sbt 'factGraphJS/fastLinkJS'
+bash demo/copy-fg.sh
+python3 -m http.server 8000 --bind 127.0.0.1
+```
+
+Open `http://localhost:8000/demo/` to choose a demo:
+
+- **Fact dictionary explorer** (`demo/explorer.html`): upload an XML dictionary,
+  set inputs, and inspect derived facts, saved state, and any declared checks.
+- **Compliance checklist** (`demo/compliance.html`): the security-training example
+  loads automatically. Compare answered inputs with the policy result, try the
+  four preset scenarios, or enter more than 80 reported training hours to see a
+  non-blocking warning. The example policy and threshold are illustrative.
+
+Each page owns its graph; loading a dictionary in the explorer does not affect
+the checklist. Both demos use the same generated library module.
+
 ## Exact rational arithmetic
 
 Rational numerators and denominators use arbitrary-precision integers internally. Arithmetic and

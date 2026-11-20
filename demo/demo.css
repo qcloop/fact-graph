@@ -1,0 +1,76 @@
+:root {
+  color-scheme: light;
+  font-family: system-ui, sans-serif;
+  color: #172b3a;
+  background: #f5f7f9;
+  line-height: 1.5;
+}
+
+body {
+  max-width: 68rem;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+
+a { color: #145da0; }
+nav { display: flex; flex-wrap: wrap; gap: 1.5rem; margin-bottom: 2rem; }
+h1 { margin-bottom: .5rem; }
+h2 { margin-top: 0; font-size: 1.2rem; }
+.intro { font-size: 1.15rem; }
+.hint { color: #526573; font-size: .9rem; }
+
+.demo-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+  gap: 1.25rem;
+}
+
+.panel {
+  background: white;
+  border: 1px solid #d7e0e7;
+  border-radius: .5rem;
+  padding: 1.5rem;
+  margin: 1.25rem 0;
+  min-width: 0;
+}
+
+.demo-list .panel { margin: 0 0 1.25rem; }
+fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+label { display: block; font-weight: 600; margin-top: .75rem; }
+label:first-child { margin-top: 0; }
+
+input, select, button { font: inherit; }
+input:not([type="file"]), select {
+  box-sizing: border-box;
+  width: 100%;
+  padding: .5rem;
+  border: 1px solid #9cafbd;
+  border-radius: .25rem;
+}
+input[type="file"] { max-width: 100%; }
+button {
+  padding: .5rem .85rem;
+  margin-top: 1rem;
+  border: 1px solid #145da0;
+  border-radius: .25rem;
+  color: #fff;
+  background: #145da0;
+  cursor: pointer;
+}
+button:disabled, fieldset:disabled button { cursor: default; opacity: .55; }
+button:hover:enabled { background: #104a80; }
+:focus-visible { outline: 3px solid #df9414; outline-offset: 3px; }
+.scenario-buttons { display: flex; flex-wrap: wrap; gap: .75rem; }
+.scenario-buttons button { margin-top: 0; }
+
+.notice { padding: .75rem 1rem; border-radius: .25rem; }
+.error { background: #ffebe8; color: #7c201b; }
+.warning { background: #fff4cf; color: #684b00; }
+.result dt { font-weight: 600; }
+.result dd { margin: .25rem 0 1rem; font-size: 1.5rem; font-weight: 700; }
+[data-status="pass"] { color: #14683e; }
+[data-status="fail"] { color: #a22421; }
+[data-status="undetermined"] { color: #805700; }
+[data-status="notApplicable"] { color: #526573; }
+summary { cursor: pointer; font-weight: 600; }
+pre { overflow: auto; background: #f5f7f9; padding: 1rem; border-radius: .25rem; }

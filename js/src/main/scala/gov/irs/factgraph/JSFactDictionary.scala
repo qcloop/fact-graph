@@ -18,6 +18,7 @@ object JSFactDictionary:
     val dictionary = this()
     JSMeta.fromConfig(e.meta, dictionary)
     e.facts.map(FactDefinition.fromConfig(_)(using dictionary))
+    dictionary.addChecks(e.checks)
     dictionary.freeze()
     dictionary
 

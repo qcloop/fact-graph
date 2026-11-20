@@ -23,6 +23,9 @@ import Console.{ GREEN, RED, RESET, YELLOW }
 class Graph(val dictionary: FactDictionary, val persister: Persister):
   val root: Fact = Fact(this)
 
+  /** Evaluate requirements without validating or saving input. Missing and placeholder answers remain undetermined. */
+  def check(): Seq[CheckResult] = dictionary.getChecks().map(_.evaluate(this))
+
   private[factgraph] val factCache = mutable.HashMap[Path, Option[Fact]]()
   private[factgraph] val resultCache =
     mutable.HashMap[Path, MaybeVector[Result[Any]]]()

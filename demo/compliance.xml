@@ -1,0 +1,35 @@
+<FactDictionaryModule>
+  <Facts>
+    <Fact path="/asOf">
+      <Writable><Day/></Writable>
+    </Fact>
+    <Fact path="/isEmployee">
+      <Writable><Boolean/></Writable>
+    </Fact>
+    <Fact path="/trainingExpiresOn">
+      <Writable><Day/></Writable>
+    </Fact>
+    <Fact path="/trainingIsCurrent">
+      <Derived>
+        <GreaterThanOrEqual>
+          <Left><Dependency path="/trainingExpiresOn"/></Left>
+          <Right><Dependency path="/asOf"/></Right>
+        </GreaterThanOrEqual>
+      </Derived>
+    </Fact>
+    <Fact path="/reportedTrainingHours">
+      <Writable>
+        <Int/>
+        <Limit type="Min"><Int>0</Int></Limit>
+        <Limit type="Max" level="Warn"><Int>80</Int></Limit>
+      </Writable>
+    </Fact>
+  </Facts>
+  <Checks>
+    <Check id="security-training-required" path="/trainingIsCurrent" appliesWhen="/isEmployee">
+      <Name>Security training is current</Name>
+      <Message>Employees need unexpired security training before receiving system access.</Message>
+      <Source>Illustrative internal access policy, section 1</Source>
+    </Check>
+  </Checks>
+</FactDictionaryModule>

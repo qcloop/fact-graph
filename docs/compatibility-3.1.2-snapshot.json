@@ -1,0 +1,303 @@
+{
+  "date": "2026-11-20",
+  "candidateVersion": "3.1.2-SNAPSHOT",
+  "candidateArtifacts": {
+    "jvmSha256": "283de219d17b972e278543b514e9f47c1c55985ac779d9d5f30f1c5eb5ba5ea8",
+    "javascriptFullLinkSha256": "21285586fdfb1c7391a38940ea65d27eb4ada144578a426d468bdf81a76cdf92"
+  },
+  "sourceRevisions": {
+    "graphHeadBaseline": "67bf794ec932d87331b3b06729e5f73fb61856e2",
+    "graphConsumerCiPin": "fe41ec31b38e7d4389d8e0a5258941cdfdf19782",
+    "directFile": "cbb8fa677ec0d5e0c82fb9b86e681564074c352b",
+    "withholdingEstimator": "31e040b58d57c68d17309f8c1942969d2dae93b4",
+    "eitcAssistant": "26d43dd2b933fca325b69ca82198f4c35301fa3f"
+  },
+  "isolation": {
+    "consumerCopies": "git archive snapshots under temporary directory",
+    "mavenRepository": "private copy of dependency cache; candidate published only there",
+    "consumerRepositoriesModified": false,
+    "publishedArtifactsModified": false
+  },
+  "validation": {
+    "library": {
+      "jvmSuite": "passed",
+      "javascriptSuite": "passed",
+      "exportSmokeChecks": "passed",
+      "cleanupRegression": "passed on both targets; JVM property budget 3000"
+    },
+    "taxAdvisor": {
+      "tests": 122,
+      "failures": 0,
+      "errors": 0,
+      "verify": "passed including analysis and packaging",
+      "ciPinnedBaselineTests": 122,
+      "redisCasesExecuted": 0,
+      "redisCiGate": "fails because no Redis was available",
+      "httpSmoke": {
+        "readiness": "UP",
+        "initialize": "passed",
+        "toolDiscovery": "passed",
+        "toolCount": 15,
+        "createSession": "passed",
+        "redis": "not exercised"
+      }
+    },
+    "withholdingEstimator": {
+      "tests": 484,
+      "failures": 0,
+      "errors": 0
+    },
+    "eitcAssistant": {
+      "tests": 219,
+      "failures": 0,
+      "errors": 0
+    },
+    "directFileBackend": {
+      "mainAndTestCompilation": "passed",
+      "testsExecuted": false,
+      "packaging": "blocked by existing Spotless violation in src/test/java/gov/irs/directfile/api/util/base/BaseRepositoryTest.java; reproduced with CI-pinned baseline"
+    },
+    "directFileFrontend": {
+      "dropInCompatible": false,
+      "fullFrontendSuiteExecuted": false,
+      "reason": "Existing digest constructor, GraphFactory.apply(dictionary,persister), and save() contracts differ from both 3.1 baselines and candidate"
+    }
+  },
+  "javaProbes": {
+    "baseline": {
+      "label": "baseline",
+      "javaConfigLinked": true,
+      "rejectedWrite": {
+        "rejected": true,
+        "afterSecondSave": -1,
+        "secondSaveSucceeded": true,
+        "beforeSecondSave": 100
+      },
+      "actualDirectFileHelper": {
+        "hasViolations": false,
+        "savedValue": -1
+      },
+      "syncReportedRemovalStillPersisted": 0,
+      "lowercaseWarnFixture": "loaded"
+    },
+    "pinned-baseline": {
+      "label": "pinned-baseline",
+      "javaConfigLinked": true,
+      "rejectedWrite": {
+        "secondSaveSucceeded": true,
+        "beforeSecondSave": 100,
+        "rejected": true,
+        "afterSecondSave": -1
+      },
+      "actualDirectFileHelper": {
+        "hasViolations": false,
+        "savedValue": -1
+      },
+      "syncReportedRemovalStillPersisted": 0,
+      "lowercaseWarnFixture": "loaded"
+    },
+    "candidate-fixed": {
+      "label": "candidate-fixed",
+      "javaConfigLinked": true,
+      "rejectedWrite": {
+        "secondSaveSucceeded": true,
+        "afterSecondSave": 100,
+        "rejected": true,
+        "beforeSecondSave": 100
+      },
+      "actualDirectFileHelper": {
+        "hasViolations": false,
+        "savedValue": null
+      },
+      "syncReportedRemovalStillPersisted": 0,
+      "lowercaseWarnFixture": "loaded"
+    },
+    "candidate-old-java-adapter": {
+      "label": "candidate-old-java-adapter",
+      "javaConfigLinked": true,
+      "rejectedWrite": {
+        "secondSaveSucceeded": true,
+        "afterSecondSave": 100,
+        "rejected": true,
+        "beforeSecondSave": 100
+      },
+      "actualDirectFileHelper": {
+        "hasViolations": false,
+        "savedValue": null
+      },
+      "syncReportedRemovalStillPersisted": 0,
+      "lowercaseWarnFixture": "loaded"
+    }
+  },
+  "javascriptProbes": {
+    "direct-file-bundled": {
+      "label": "direct-file-bundled",
+      "actualDirectFileFourArgumentDigest": {
+        "loaded": true
+      },
+      "directFileRestoration": {
+        "complete": true,
+        "value": 314159
+      },
+      "explicitFromJSON": {
+        "supported": false
+      },
+      "saveReturnShape": {
+        "valid": true,
+        "limitViolations": true,
+        "keys": [
+          "valid",
+          "limitViolations"
+        ]
+      },
+      "directXMLTaxDictionary": {
+        "supported": false
+      },
+      "lowercaseWarnFixture": {
+        "supported": false
+      }
+    },
+    "baseline": {
+      "label": "baseline",
+      "actualDirectFileFourArgumentDigest": {
+        "error": "Cannot read properties of undefined (reading 'typeName')"
+      },
+      "directFileRestoration": {
+        "complete": false,
+        "value": null
+      },
+      "explicitFromJSON": {
+        "supported": true,
+        "complete": true,
+        "value": 314159
+      },
+      "saveReturnShape": {
+        "error": "fg.GraphFactory.apply(...).save is not a function"
+      },
+      "directXMLTaxDictionary": {
+        "supported": true,
+        "complete": true,
+        "hasValue": true,
+        "value": true,
+        "paths": 3046
+      },
+      "lowercaseWarnFixture": {
+        "loaded": true
+      }
+    },
+    "pinned-baseline": {
+      "label": "pinned-baseline",
+      "actualDirectFileFourArgumentDigest": {
+        "error": "Cannot read properties of undefined (reading 'typeName')"
+      },
+      "directFileRestoration": {
+        "complete": false,
+        "value": null
+      },
+      "explicitFromJSON": {
+        "supported": true,
+        "complete": true,
+        "value": 314159
+      },
+      "saveReturnShape": {
+        "error": "fg.GraphFactory.apply(...).save is not a function"
+      },
+      "directXMLTaxDictionary": {
+        "supported": true,
+        "complete": true,
+        "hasValue": true,
+        "value": true,
+        "paths": 3046
+      },
+      "lowercaseWarnFixture": {
+        "loaded": true
+      }
+    },
+    "candidate-fixed": {
+      "label": "candidate-fixed",
+      "actualDirectFileFourArgumentDigest": {
+        "error": "Cannot read properties of undefined (reading 'typeName')"
+      },
+      "directFileRestoration": {
+        "complete": false,
+        "value": null
+      },
+      "explicitFromJSON": {
+        "supported": true,
+        "complete": true,
+        "value": 314159
+      },
+      "saveReturnShape": {
+        "error": "fg.GraphFactory.apply(...).save is not a function"
+      },
+      "directXMLTaxDictionary": {
+        "supported": true,
+        "complete": true,
+        "hasValue": true,
+        "value": true,
+        "paths": 3046
+      },
+      "lowercaseWarnFixture": {
+        "loaded": true
+      }
+    }
+  },
+  "unmodifiedLegacyReturnReplay": {
+    "baseline": {
+      "cases": 161,
+      "loadErrors": 161,
+      "roundtripFailures": 0,
+      "differentFromCandidate": 0
+    },
+    "pinned-baseline": {
+      "cases": 161,
+      "loadErrors": 161,
+      "roundtripFailures": 0,
+      "differentFromCandidate": 0
+    },
+    "candidate-fixed": {
+      "cases": 161,
+      "loadErrors": 161,
+      "roundtripFailures": 0,
+      "differentFromCandidate": 0
+    }
+  },
+  "experimentalEnumNormalizedReplay": {
+    "qualification": "diagnostic migration experiment only; original fixture files unchanged",
+    "normalization": "EnumWrapper.item.value: [] -> null, [string] -> string; 3005 values transformed",
+    "results": {
+      "baseline": {
+        "cases": 161,
+        "loaded": 160,
+        "roundtripFailures": 0,
+        "differentFromCandidate": 0
+      },
+      "pinned-baseline": {
+        "cases": 161,
+        "loaded": 160,
+        "roundtripFailures": 0,
+        "differentFromCandidate": 0
+      },
+      "candidate-fixed": {
+        "cases": 161,
+        "loaded": 160,
+        "roundtripFailures": 0,
+        "differentFromCandidate": 0
+      }
+    },
+    "evaluatedPaths": [
+      "/finalTaxAmount",
+      "/totalTax",
+      "/agi",
+      "/flowIncomplete"
+    ],
+    "remainingLoadFailure": "8862-ctc-no-eitc.json: IllegalArgumentException on all three versions",
+    "completeResultsPerEvaluatedPath": 160,
+    "completeResultsAcrossFourPaths": 640
+  },
+  "candidateRegressionsFixed": [
+    "Case-insensitive XML Error/Warn spelling matches existing Java loader",
+    "Dictionary cleanup removals survive rollback of another retained value"
+  ],
+  "releaseVerdict": "Passed the exercised TaxAdvisor, withholding-estimator, and EITC-assistant JVM tests. Direct File backend functional qualification and Redis remain incomplete; the legacy frontend and unmodified saved returns are not drop-in compatible."
+}

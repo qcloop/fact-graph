@@ -1,48 +1,27 @@
-<script type=module src="./fg.js"></script>
-<script type=module src="./loader.js"></script>
-
-<style>
-label { display: block; }
-#graph { display: block; }
-#error {
-  background-color: bisque;
-  width: fit-content;
-  padding: 10px;
-
-  &::before { content: 'error: ' }
-
-  &.hidden { display: none; }
-}
-</style>
-
-<title>Fact Graph Demo</title>
-<h1>Fact Graph Demo </h1>
-
-Load Fact Dictionary:
-
-<label>
-  <input type="file" id="input" multiple onchange="loadDictionary(event)"/>
-</label>
-
-<datalist id=facts></datalist>
-
-<h2>Set Facts</h2>
-
-<form onsubmit="setFact(event)">
-  <label>Fact Path: <input type=text list=facts name=fact></label>
-  <label>Value: <input type=text name=value></label>
-  <button>Save</button>
-</form>
-
-<div id=error class=hidden></div>
-
-<h2>Get Facts</h2>
-<form onsubmit="getFact(event)">
-  <label>Fact Path: <input type=text list=facts name=get-fact> </label>
-  <button>Get</button
-</form>
-<div id="fact-result"></div>
-
-<h2>Current Graph</h2>
-<pre id=graph></pre>
-
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fact Graph demos</title>
+  <link rel="stylesheet" href="./demo.css">
+</head>
+<body>
+  <main>
+    <h1>Fact Graph demos</h1>
+    <p class="intro">Explore a fact dictionary or try a policy checklist.</p>
+    <div class="demo-list">
+      <section class="panel">
+        <h2><a href="./explorer.html">Fact dictionary explorer</a></h2>
+        <p>Load an XML dictionary, enter values, inspect derived facts, and view the graph and any declared checks.</p>
+        <p>Use this demo to explore your own rules or the existing tax dictionary.</p>
+      </section>
+      <section class="panel">
+        <h2><a href="./compliance.html">Compliance checklist</a></h2>
+        <p>Try a security-training requirement and compare answered inputs with the policy result.</p>
+        <p>Includes passing, failing, unanswered, and inapplicable examples, plus a warning limit.</p>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

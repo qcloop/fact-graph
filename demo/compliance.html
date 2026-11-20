@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Compliance checklist</title>
+  <link rel="stylesheet" href="./demo.css">
+  <script type="module" src="./compliance.js"></script>
+</head>
+<body>
+  <nav aria-label="Demo navigation"><a href="./">All demos</a><a href="./explorer.html">Fact dictionary explorer</a></nav>
+  <main>
+    <h1>Compliance checklist</h1>
+    <p class="intro">Employees need unexpired security training before receiving system access.</p>
+    <p>An expired date is a valid, complete answer that fails this illustrative policy. An unanswered date leaves the decision undetermined.</p>
+    <p id="error" class="notice error" role="alert" hidden></p>
+    <p id="warnings" class="notice warning" role="status" hidden></p>
+    <div class="demo-list">
+      <section class="panel">
+        <h2>Training information</h2>
+        <form id="compliance-form">
+          <fieldset id="compliance-fields" disabled>
+            <label for="as-of">Evaluate as of</label>
+            <input type="date" id="as-of" name="as-of" value="2026-11-20" required>
+            <label for="employee">Employee</label>
+            <select id="employee" name="employee">
+              <option value="true">Yes</option>
+              <option value="false">No</option>
+              <option value="">Unanswered</option>
+            </select>
+            <label for="expires-on">Training expires on</label>
+            <input type="date" id="expires-on" name="expires-on" value="2026-12-31">
+            <label for="hours">Reported training hours (optional)</label>
+            <input type="number" id="hours" name="hours" step="1" aria-describedby="hours-help">
+            <p id="hours-help" class="hint">Values above 80 produce a warning. Negative values are rejected.</p>
+            <button>Update checklist</button>
+          </fieldset>
+        </form>
+      </section>
+      <section class="panel" aria-live="polite">
+        <h2>Checklist result</h2>
+        <dl class="result">
+          <dt>Training inputs answered</dt><dd id="completeness">Loading…</dd>
+          <dt>Policy result</dt><dd id="policy-status">Loading…</dd>
+        </dl>
+        <p id="policy-message"></p>
+        <p id="missing-inputs"></p>
+        <p id="policy-source" class="hint"></p>
+      </section>
+    </div>
+    <section class="panel">
+      <h2>Try a scenario</h2>
+      <p>Each example resets the evaluation date to November 20, 2026.</p>
+      <fieldset id="scenario-fields" class="scenario-buttons" disabled>
+        <button type="button" data-scenario="current">Current training</button>
+        <button type="button" data-scenario="expired">Expired training</button>
+        <button type="button" data-scenario="missing">Unanswered date</button>
+        <button type="button" data-scenario="exempt">Non-employee</button>
+      </fieldset>
+    </section>
+    <details class="panel">
+      <summary>Inspect the dictionary and results</summary>
+      <p><a href="./compliance.xml">View the example dictionary</a></p>
+      <h2>Check results</h2>
+      <pre id="checks">[]</pre>
+      <h2>Saved graph</h2>
+      <pre id="graph">{}</pre>
+    </details>
+  </main>
+</body>
+</html>

@@ -164,6 +164,22 @@ class InMemoryPersisterSpec extends AnyFunSpec:
       }
     }
     describe(".syncWithDictionary") {
+      it("keeps removed paths absent when another persisted value violates a limit") {
+        for (suffix <- 0 until 40) {
+          val known = s"/known$suffix"
+          val unknown = s"/removed$suffix"
+          val dict = FactDictionary.importFromXml(s"""<FactDictionaryModule><Facts>
+            <Fact path="$known"><Writable><Int/><Limit type="Min"><Int>0</Int></Limit></Writable></Fact>
+            </Facts></FactDictionaryModule>""")
+          val persister = InMemoryPersister(known -> -1, unknown -> 42)
+          val graph = Graph(dict, persister)
+          assert(graph.checkPersister().map(_.path) == Seq(unknown))
+          assert(!ujson.read(persister.toJson()).obj.contains(unknown))
+          graph.save()
+          assert(!ujson.read(persister.toJson()).obj.contains(unknown))
+        }
+      }
+
       describe("when a persisted fact's type matches the dictionary") {
         it("indicates no problem") {
           val jsonData =

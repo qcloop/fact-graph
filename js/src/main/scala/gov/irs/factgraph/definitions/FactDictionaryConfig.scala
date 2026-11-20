@@ -17,3 +17,7 @@ object FactDictionaryConfig:
       facts: scala.scalajs.js.Array[FactConfigElement],
   ): FactDictionaryConfigElement =
     FactDictionaryConfigElement(meta, facts.toSeq)
+
+  @JSExport
+  def withChecks(config: FactDictionaryConfigTrait, checks: js.Array[CheckConfig]): FactDictionaryConfigTrait =
+    FactDictionaryConfigElement(config.meta, config.facts.toSeq).withChecks(checks.toSeq)

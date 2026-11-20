@@ -17,7 +17,12 @@ enum ErrorType:
 
 // Consider extending this class so that the errorType can actually use ErrorType
 // It's currently a string so that it can be easily checked for in JS
-class SetReturnValue(val errorType: String, val errorName: String, val expectedValue: String) extends js.Object
+class SetReturnValue(
+    val errorType: String,
+    val errorName: String,
+    val expectedValue: String,
+    val warnings: js.Array[LimitViolationWrapper] = js.Array(),
+) extends js.Object
 
 @JSExportTopLevel("Graph")
 @JSExportAll
@@ -102,12 +107,14 @@ class JSGraph(
     // Surface limit violations
     val rawSave = this.set(path, typedValue)
     val limitViolations = rawSave._2.map(f => LimitViolationWrapper.fromLimitViolation(f))
-    if (limitViolations.nonEmpty) {
-      val limitViolation = limitViolations.head
-      return SetReturnValue(LimitError.toString, limitViolation.limitName, limitViolation.limit)
+    val warnings = limitViolations.filter(_.level == "Warn").toJSArray
+    val errors = limitViolations.filter(_.level == "Error")
+    if (errors.nonEmpty) {
+      val limitViolation = errors.head
+      return SetReturnValue(LimitError.toString, limitViolation.limitName, limitViolation.limit, warnings)
     }
 
-    SetReturnValue(null, null, null)
+    SetReturnValue(null, null, null, warnings)
   }
 
   def paths(): js.Array[String] =
@@ -131,6 +138,10 @@ class JSGraph(
   def explainAndSolve(path: String): js.Array[js.Array[String]] =
     val rawExpl = this.explain(path)
     return rawExpl.solves.map(l => l.map(p => p.toString).toJSArray).toJSArray
+
+  @JSExport("check")
+  def jsCheck(): js.Array[CheckResultWrapper] =
+    this.check().map(CheckResultWrapper.fromResult).toJSArray
 
   @JSExport("checkPersister")
   def jsCheckPersister(): js.Array[PersisterSyncIssueWrapper] =
@@ -157,6 +168,29 @@ final class LimitViolationWrapper(
     val limit: String,
     val actual: String,
 ) extends js.Object
+
+trait CheckResultWrapper extends js.Object:
+  val id: String
+  val name: String
+  val message: String
+  val source: String | Null
+  val level: String
+  val status: String
+  val missingFacts: js.Array[String]
+
+object CheckResultWrapper:
+  def fromResult(result: CheckResult): CheckResultWrapper =
+    js.Dynamic
+      .literal(
+        id = result.id,
+        name = result.name,
+        message = result.message,
+        source = result.source.orNull,
+        level = result.level.toString,
+        status = result.status.code,
+        missingFacts = result.missingFacts.toJSArray,
+      )
+      .asInstanceOf[CheckResultWrapper]
 
 object LimitViolationWrapper {
   def fromLimitViolation(lv: LimitViolation) =
