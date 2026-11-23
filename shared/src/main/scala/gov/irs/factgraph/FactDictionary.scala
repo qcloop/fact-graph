@@ -9,9 +9,10 @@ import gov.irs.factgraph.compnodes.CollectionNode
 import gov.irs.factgraph.compnodes.EnumNode
 import gov.irs.factgraph.compnodes.MultiEnumNode
 import gov.irs.factgraph.compnodes.RootNode
-import gov.irs.factgraph.definitions.{ FactDictionaryConfigElement, FactDictionaryConfigTrait }
+import gov.irs.factgraph.definitions.{ CheckConfig, FactDictionaryConfigElement, FactDictionaryConfigTrait }
 import gov.irs.factgraph.definitions.fact.FactConfigElement
 import gov.irs.factgraph.definitions.meta.MetaConfigTrait
+import gov.irs.factgraph.exceptions.FactGraphValidationException
 import scala.collection.mutable
 import scala.scalajs.js.annotation.JSExport
 import scala.util.matching.Regex
@@ -24,6 +25,18 @@ class FactDictionary:
   private val definitionsAsNodes: mutable.Map[Path, NodeSeq] = mutable.Map()
   private var frozen: Boolean = false
   private var meta: MetaConfigTrait = Meta.empty()
+  private var checks: Vector[Check] = Vector.empty
+
+  def getChecks(): Seq[Check] = checks
+
+  protected[factgraph] def addChecks(configs: Iterable[CheckConfig]): Unit =
+    if (frozen)
+      throw new UnsupportedOperationException("cannot add checks to a frozen FactDictionary")
+    val compiled = configs.toVector.map(Check.fromConfig(_, this))
+    val ids = (checks ++ compiled).map(_.config.id)
+    if (ids.distinct.size != ids.size)
+      throw FactGraphValidationException("Check ids must be unique within a dictionary")
+    checks ++= compiled
 
   def getPaths(): Iterable[Path] =
     definitions.keys
@@ -138,6 +151,7 @@ trait DefaultFactDictConfig {
     val dictionary = this()
     Meta.fromConfig(e.meta, dictionary)
     e.facts.map(FactDefinition.fromConfig(_)(using dictionary))
+    dictionary.addChecks(e.checks)
     dictionary.freeze()
     dictionary
 
@@ -160,7 +174,24 @@ trait DefaultFactDictConfig {
   def fromXml(factDictionaryModule: scala.xml.NodeSeq): FactDictionary = {
     val facts = factDictionaryModule \\ "Fact"
     val factConfigs = facts.map(FactConfigElement.fromXml)
-    val config = FactDictionaryConfigElement(meta, factConfigs)
+    val containers = factDictionaryModule \\ "Checks"
+    val checks = containers.flatMap { container =>
+      if (
+        container.attributes.nonEmpty || container.child.exists {
+          case _: scala.xml.Elem | _: scala.xml.Comment => false
+          case child                                    => child.text.trim.nonEmpty
+        }
+      )
+        throw FactGraphValidationException("Checks accepts only Check elements and no attributes")
+      container.child.collect { case element: scala.xml.Elem =>
+        if (element.label != "Check")
+          throw FactGraphValidationException("Checks may only contain Check elements")
+        CheckConfig.fromXml(element)
+      }
+    }
+    if ((factDictionaryModule \\ "Check").size != checks.size)
+      throw FactGraphValidationException("Check elements must be direct children of Checks")
+    val config = FactDictionaryConfigElement(meta, factConfigs).withChecks(checks)
     fromConfig(config)
   }
 }

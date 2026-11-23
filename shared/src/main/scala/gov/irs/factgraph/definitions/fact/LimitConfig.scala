@@ -21,7 +21,7 @@ object LimitConfig {
 
     val compNode = CompNodeConfig.fromXml(children.head)
 
-    val level = LimitLevel.Error // Just setting all these to Error for now
+    val level = LimitLevel.fromXml(node \@ "level")
 
     LimitConfig(operation, level, compNode)
   }

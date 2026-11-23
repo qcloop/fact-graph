@@ -135,7 +135,8 @@ final class InMemoryPersister(var store: Map[Path, WritableType]) extends Persis
         (true, None)
 
   override def syncWithDictionary(graph: Graph): Seq[PersisterSyncIssue] =
-    val results = live.flatMap { (path, writableType) =>
+    // Decide cleanup from a stable snapshot before any graph.set call can save or roll back live state.
+    val decisions = live.toVector.map { (path, writableType) =>
       val dictionaryPath = path.isCollectionMember match
         case true  => path.asAbstract
         case false => path
@@ -153,6 +154,15 @@ final class InMemoryPersister(var store: Map[Path, WritableType]) extends Persis
                 graph.dictionary(dictionaryPath).get.value.getClass,
               )
 
+      (path, writableType, keepFact, optionalMessage)
+    }
+    val removedPaths = decisions.collect { case (path, _, false, _) => path }.toSet
+    live --= removedPaths
+    // Cleanup is a normalization of saved state: a later rejected edit must not resurrect removed entries.
+    store = store -- removedPaths
+    toValidate.dequeueAll(fact => removedPaths.contains(fact.path))
+
+    val results = decisions.flatMap { (path, writableType, keepFact, optionalMessage) =>
       if (keepFact)
         val toWrite = writableType match
           case _ => writableType
@@ -161,7 +171,6 @@ final class InMemoryPersister(var store: Map[Path, WritableType]) extends Persis
           Some(PersisterSyncIssue(path.toString, optionalMessage.get))
         else None
       else
-        live -= path
         Some(
           PersisterSyncIssue(
             path.toString,
@@ -181,7 +190,11 @@ final class InMemoryPersister(var store: Map[Path, WritableType]) extends Persis
     validating = false
     // The only level that should stop us from saving
     // is an actual error
-    if (issues.exists(x => x.LimitLevel == LimitLevel.Error)) (false, issues)
+    if (issues.exists(x => x.LimitLevel == LimitLevel.Error))
+      // A rejected batch must not be committed by the next successful write.
+      live.clear()
+      live ++= store
+      (false, issues)
     else
       store = live.toMap
       (true, issues)

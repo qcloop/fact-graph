@@ -99,9 +99,17 @@ Must have a type as a child node, and can optionally have any number of `<Limit>
 ### `<Limit>`
 
 A limit on a Writable fact.
-Must have the `type` attribute, which can be either `Min` or `Max`.
+Must have the `type` attribute. Supported operations are `Min`, `Max`, `Match`,
+`MinLength`, `MaxLength`, and `MaxCollectionSize`.
+An optional `level` attribute is `Error` (the default) or `Warn`. Errors reject the
+save; warnings are returned to the caller and permit saving. Level names are
+case-insensitive, matching the existing Java XML loader. Invalid level names
+are rejected when loading the dictionary.
 
-The child of the limit must evaluate to an expression of the same type.
+The expected expression type depends on the operation: numeric limits compare
+compatible values, `Match` takes a string pattern, and size/length limits take an integer.
+An error rolls back the pending batch to the previous saved state, so a later
+successful write cannot persist a previously rejected value.
 
 ```xml
 <Writable>
@@ -112,11 +120,101 @@ The child of the limit must evaluate to an expression of the same type.
 </Writable>
 ```
 
+```xml
+<Limit type="Max" level="Warn"><Int>80</Int></Limit>
+```
+
+## Policy Checks
+
+Checks describe requirements over facts. They are independent of input limits:
+a valid, complete answer can demonstrate that a policy is not satisfied. For
+example, an expired training date is valid input, while a requirement for current
+training fails.
+
+A module may contain a `<Checks>` element with `<Check>` children:
+
+```xml
+<Checks>
+  <Check id="security-training-required" path="/trainingIsCurrent" appliesWhen="/isEmployee" level="Error">
+    <Name>Security training is current</Name>
+    <Message>Employees need unexpired security training before receiving system access.</Message>
+    <Source>Internal access policy, section 1</Source>
+  </Check>
+</Checks>
+```
+
+`id` must be non-empty and unique across the dictionary. `path` is required and
+refers to a declared scalar Boolean fact. `appliesWhen` optionally refers to
+another declared scalar Boolean fact; omitting it makes the check always
+applicable. Both paths must be canonical absolute paths, without wildcards or
+collection member IDs. Collection checks can reference a scalar aggregation fact.
+Use derived facts for calculations and composite conditions.
+
+`level` is `Error` by default, or `Warn` (case-insensitive). It classifies the finding and never
+blocks writing facts. Applications decide how findings affect their workflow.
+`Name`, `Message`, and `Source` are optional, text-only metadata, each permitted
+once. A missing/blank name defaults to the ID. Missing messages are empty strings;
+missing sources are `None` on Scala and `null` in JavaScript. Unknown attributes,
+child elements, and severity values are rejected.
+
+`graph.check()` returns one result per check, in declaration order:
+
+| Applicability | Assertion | Status |
+| --- | --- | --- |
+| Confirmed false | Any | `notApplicable` |
+| Missing or placeholder | Any | `undetermined` |
+| Confirmed true, or omitted | Confirmed true | `pass` |
+| Confirmed true, or omitted | Confirmed false | `fail` |
+| Confirmed true, or omitted | Missing or placeholder | `undetermined` |
+
+Completeness follows the existing expression semantics. For example, `All` may
+be conclusively false even when another operand is unanswered. A placeholder
+result on the assertion or applicability itself is always undetermined.
+
+Each result contains `id`, `name`, `message`, `source`, `level`, `status`, and
+`missingFacts`. Scala uses `CheckStatus` (`Pass`, `Fail`, `NotApplicable`,
+`Undetermined`) and `LimitLevel` enums. JavaScript returns ordinary objects and
+arrays with the status strings above and `Error`/`Warn` levels.
+`missingFacts` lists unique, sorted writable paths identified by the existing
+explanation mechanism for the relevant undetermined expression. It is not an
+inventory of every unanswered fact; an unresolved collection alias may have no
+concrete writable path to report. Inapplicable and determined checks return an
+empty list. A check's missing-input list does not override its status.
+Expression evaluation errors propagate to the caller; they are not converted
+into an `undetermined` policy result.
+
+Checks do not validate, save, delete, or otherwise change inputs, and results are
+not persisted. Restoring a graph and calling `check()` reevaluates the dictionary's
+checks. For reproducible date-based decisions, supply an explicit writable date
+such as `/asOf`; changing the system clock cannot then alter this example.
+
+Scala configuration callers can attach checks without changing the existing
+two-field `FactDictionaryConfigElement` constructor/extractor:
+
+```scala
+val config = FactDictionaryConfigElement(meta, facts)
+  .withChecks(Seq(CheckConfig("training", "/trainingIsCurrent", Some("/isEmployee"))))
+val graph = Graph(FactDictionary.fromConfig(config))
+val results = graph.check()
+```
+
+JavaScript configuration callers can use `CheckConfigFactory.create(id, path,
+appliesWhen?, level?, name?, message?, source?)` and
+`FactDictionaryConfig.withChecks(config, checks)` before passing the resulting
+config to `FactDictionaryFactory.fromConfig`. Both `withChecks` helpers replace
+the check list; existing fact definitions and metadata are preserved.
+
+See [the runnable security-training dictionary](../demo/compliance.xml).
+
+## Fact Defaults
+
 ### `<Placeholder>`
 
 Writable facts can have placeholder values.
 The fact will evaluate to the placeholder value if the fact hasn't been set by the user.
-Note that the fact, and all facts that depend on it, will still be considered "incomplete" if the placeholder value is used, even though it will have a value.
+The fact has a value but remains incomplete when a placeholder is used.
+Dependent expressions propagate this incompleteness unless the result can be
+determined independently (for example, a confirmed false operand in `All`).
 For more on completeness, see [`<IsComplete>`](#iscomplete).
 
 The child of the placeholder must evaluate to an expression of the same type.
@@ -439,17 +537,17 @@ The below example evaluates to True, even though Dollar and Int are different ty
 
 ### `<NotEqual>`
 
-True if the `<Left>` expression is mathematically equal to the `<Right>` expression.
+True if the `<Left>` and `<Right>` expressions are unequal. Both must have the same node type.
 
 ```xml
-<Any>
+<NotEqual>
   <Left>
     <Dollar>4.0</Dollar>
   </Left>
   <Right>
     <Dollar>12000</Dollar>
   </Right>
-</Any>
+</NotEqual>
 ```
 
 ### `<LessThan>`
@@ -621,7 +719,7 @@ Evaluates to the nearest integer.
 
 ### `<Floor>`
 
-Evaluates to the nearest integer that is greater than the child value.
+Rounds toward negative infinity to the nearest integer.
 
 * 4.2 rounds to 4
 * 4.5 rounds to 4
@@ -772,9 +870,9 @@ Suppose you had three jobs in the jobs collection. Two of them have income value
 Then, the below example would evaluate to $200.
 
 ```xml
-<Maximum>
+<Minimum>
   <Dependency path="/jobs/*/income" />
-</Maximum>
+</Minimum>
 ```
 
 ### `<Filter>`

@@ -24,3 +24,7 @@ metals.sbt
 .DS_STORE
 
 .hegel/
+
+# Locally linked browser demo artifacts
+/demo/fg.generated.mjs
+/demo/main.mjs.map

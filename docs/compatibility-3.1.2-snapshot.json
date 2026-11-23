@@ -1,0 +1,634 @@
+{
+  "date": "2026-11-20",
+  "candidateVersion": "3.1.2-SNAPSHOT",
+  "candidateArtifacts": {
+    "jvmSha256": "283de219d17b972e278543b514e9f47c1c55985ac779d9d5f30f1c5eb5ba5ea8",
+    "javascriptFullLinkSha256": "21285586fdfb1c7391a38940ea65d27eb4ada144578a426d468bdf81a76cdf92",
+    "javascriptFastLinkSha256": "6155b263333e4b42d1d11b3684b1ede64641468488beb6d82b876d4492280406"
+  },
+  "sourceRevisions": {
+    "graphHeadBaseline": "67bf794ec932d87331b3b06729e5f73fb61856e2",
+    "graphConsumerCiPin": "fe41ec31b38e7d4389d8e0a5258941cdfdf19782",
+    "directFile": "cbb8fa677ec0d5e0c82fb9b86e681564074c352b",
+    "withholdingEstimator": "31e040b58d57c68d17309f8c1942969d2dae93b4",
+    "eitcAssistant": "26d43dd2b933fca325b69ca82198f4c35301fa3f",
+    "typeScriptTaxAdvisor": "c0c6b2724783cab14a6d61962fb3f5552d580627"
+  },
+  "isolation": {
+    "consumerCopies": "git archive snapshots under temporary directory",
+    "mavenRepository": "private copy of dependency cache; candidate published only there",
+    "consumerRepositoriesModified": true,
+    "publishedArtifactsModified": false,
+    "consumerRepositoryChanges": "Test-only dependencies, harnesses, generated properties, and documentation applied to Java tax-advisor and TypeScript TaxAdvisor after isolated validation; production algorithms unchanged. TWE/EITC working trees remain unchanged."
+  },
+  "validation": {
+    "library": {
+      "jvmSuite": "passed",
+      "javascriptSuite": "passed",
+      "exportSmokeChecks": "passed",
+      "cleanupRegression": "passed on both targets; JVM property budget 3000"
+    },
+    "taxAdvisor": {
+      "tests": 131,
+      "failures": 0,
+      "errors": 0,
+      "verify": "passed including analysis and packaging",
+      "ciPinnedBaselineTests": 122,
+      "redisCasesExecuted": 9,
+      "redisCiGate": "passed with nine executed methods and zero skips against emulator; real Redis CI layer was not run locally",
+      "httpSmoke": {
+        "typeScriptMcpCheck": "passed",
+        "backend": "Jedis-Mock 1.1.21 via production Lettuce client",
+        "factGraphVersion": "3.1.2-SNAPSHOT",
+        "health": "UP",
+        "mcpInitialize": "passed",
+        "toolDiscovery": 15,
+        "createSession": "passed",
+        "setAndGetFact": "passed",
+        "sessionSurvivesApplicationRestart": "passed",
+        "redisServerRestartTested": false
+      },
+      "redisGeneratedCases": 15000,
+      "redisBackend": "Jedis-Mock 1.1.21, temporary loopback RESP servers; production Lettuce client and scripts",
+      "redisTests": {
+        "storeMethods": 8,
+        "storeGeneratedCases": 12000,
+        "graphReconstructionMethods": 1,
+        "graphGeneratedCases": 3000,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "explicitRealEndpoint": "REDIS_URL selects real Redis; unavailable explicit endpoints fail rather than skip"
+      }
+    },
+    "withholdingEstimator": {
+      "tests": 484,
+      "failures": 0,
+      "errors": 0,
+      "siteGeneration": "passed with candidate JVM dependency and candidate fastLinkJS asset",
+      "generatedAssetHashMatchesCandidate": true,
+      "browserEndToEndExecuted": true,
+      "javascriptApiProbes": {
+        "environment": "Node.js 22.4.0; generated application dictionary; direct calls matching consumer code; no DOM or navigation automation",
+        "bundledEngineSha256": "8370eb3aac2723260d1b2df788b0791aac013e0754055da6be26c65b3b5c13ad",
+        "bundledSessionRestoration": {
+          "rootFactsEqual": true,
+          "collectionMembersEqual": true,
+          "rootDigest": "e25ccca8d64aba2c3e7160f2def82fefbc0d6587c494d541d89357ef5e9c1965"
+        },
+        "syntheticRootResultRecords": 764,
+        "rootEvaluationSummary": {
+          "complete": 269,
+          "provisional": 187,
+          "incomplete": 307,
+          "errors": 1
+        },
+        "ownSnapshotRoundtrip": true,
+        "collectionAddDeleteRestore": true,
+        "scalarWrites": 5,
+        "parseErrorAndCorrection": true,
+        "rejectedWrite": {
+          "bundled": {
+            "errorType": "LimitError",
+            "afterUnrelatedWrite": {
+              "complete": true,
+              "hasValue": true,
+              "value": "-1"
+            },
+            "afterRestore": {
+              "complete": true,
+              "hasValue": true,
+              "value": "-1"
+            }
+          },
+          "candidate": {
+            "errorType": "LimitError",
+            "afterUnrelatedWrite": {
+              "complete": true,
+              "hasValue": true,
+              "value": "100"
+            },
+            "afterRestore": {
+              "complete": true,
+              "hasValue": true,
+              "value": "100"
+            }
+          }
+        },
+        "typedBoolean": {
+          "persisted": "true",
+          "hasErrorType": false,
+          "returnKeys": [
+            "T2__f__1",
+            "T2__f__2"
+          ]
+        },
+        "wildcardDisplay": {
+          "sizes": [
+            0,
+            1,
+            31,
+            32,
+            33,
+            64
+          ],
+          "bundledDisplayedCounts": [
+            0,
+            1,
+            31,
+            32,
+            32,
+            32
+          ],
+          "candidateFastDisplayedCounts": [
+            0,
+            1,
+            31,
+            32,
+            32,
+            32
+          ],
+          "candidateFullThrowsAtEveryTestedSize": true,
+          "headBaselineFullThrowsAtEveryTestedSize": true
+        },
+        "consumerCurrencyDetection": {
+          "bundled": true,
+          "candidateFast": true,
+          "candidateFull": false,
+          "headBaselineFull": false
+        },
+        "unchangedRootEvaluationError": {
+          "path": "/selfEmploymentHealthInsuranceDeductionForm7206Line6",
+          "error": "Division by zero",
+          "context": "Direct read in partially filled synthetic scenario; same error record from bundled, HEAD baseline, and candidate."
+        }
+      },
+      "browserSmokeTests": {
+        "browser": "Google Chrome",
+        "version": "157.0.8103.80",
+        "platform": "macOS",
+        "control": "native Chrome through Computer Use",
+        "scenarioData": "synthetic only",
+        "mode": "default English multi-question flow",
+        "candidateAsset": "fastLinkJS",
+        "completeApplicationBrowserSuiteExecuted": false,
+        "stepsToResults": 7,
+        "salaryJobCollectionEntry": "passed",
+        "dateEnumBooleanAndCurrencyInputs": "passed",
+        "resultsDisplayed": "passed",
+        "acceptedValuesAfterReload": "passed",
+        "correctionAfterReload": "passed",
+        "rejectedEditNavigation": {
+          "acceptedCollegeStudentCount": 1,
+          "rejectedReplacement": -1,
+          "inlineErrorShown": true,
+          "unrelatedForeignTaxEdit": 10,
+          "nextStillNavigatesToResults": true,
+          "countAfterReturnAndReload": 1,
+          "correctionAfterReload": 2,
+          "classification": "Existing application navigation handler does not gate current input errors; candidate correctly retains accepted value."
+        }
+      }
+    },
+    "eitcAssistant": {
+      "tests": 219,
+      "failures": 0,
+      "errors": 0,
+      "siteGeneration": "passed with candidate JVM dependency and candidate fastLinkJS asset",
+      "generatedAssetHashMatchesCandidate": true,
+      "browserEndToEndExecuted": true,
+      "javascriptApiProbes": {
+        "environment": "Node.js 22.4.0; generated application dictionary; direct calls matching consumer code; no DOM or navigation automation",
+        "bundledEngineSha256": "e2a3139fb80d9db18ff97fa43b1dde265c0c8cc11de367b70466b3e7df03ccd2",
+        "bundledSessionRestoration": {
+          "rootFactsEqual": true,
+          "collectionMembersEqual": true,
+          "rootDigest": "8f0d8ef2f5b2628a0b3d16fc9f3d3f877d32cf0b88e09785ea356329120d9fac"
+        },
+        "syntheticRootResultRecords": 459,
+        "rootEvaluationSummary": {
+          "complete": 233,
+          "provisional": 109,
+          "incomplete": 117,
+          "errors": 0
+        },
+        "ownSnapshotRoundtrip": true,
+        "collectionAddDeleteRestore": true,
+        "scalarWrites": 4,
+        "parseErrorAndCorrection": true,
+        "rejectedWrite": {
+          "bundled": {
+            "errorType": "LimitError",
+            "afterUnrelatedWrite": {
+              "complete": true,
+              "hasValue": true,
+              "value": "-1.00"
+            },
+            "afterRestore": {
+              "complete": true,
+              "hasValue": true,
+              "value": "-1.00"
+            }
+          },
+          "candidate": {
+            "errorType": "LimitError",
+            "afterUnrelatedWrite": {
+              "complete": true,
+              "hasValue": true,
+              "value": "100.00"
+            },
+            "afterRestore": {
+              "complete": true,
+              "hasValue": true,
+              "value": "100.00"
+            }
+          }
+        },
+        "typedBoolean": {
+          "persisted": "true",
+          "hasErrorType": false,
+          "returnKeys": [
+            "T2__f__1",
+            "T2__f__2"
+          ]
+        },
+        "wildcardDisplay": {
+          "sizes": [
+            0,
+            1,
+            31,
+            32,
+            33,
+            64
+          ],
+          "bundledDisplayedCounts": [
+            0,
+            1,
+            31,
+            32,
+            32,
+            32
+          ],
+          "candidateFastDisplayedCounts": [
+            0,
+            1,
+            31,
+            32,
+            32,
+            32
+          ],
+          "candidateFullThrowsAtEveryTestedSize": true,
+          "headBaselineFullThrowsAtEveryTestedSize": true
+        },
+        "consumerCurrencyDetection": {
+          "bundled": true,
+          "candidateFast": true,
+          "candidateFull": false,
+          "headBaselineFull": false
+        },
+        "childNameWrite": {
+          "bundled": {
+            "errorType": "UnsupportedTypeError",
+            "stored": {
+              "complete": false,
+              "hasValue": false,
+              "value": null
+            }
+          },
+          "candidate": {
+            "errorType": null,
+            "stored": {
+              "complete": true,
+              "hasValue": true,
+              "value": "Synthetic child"
+            }
+          }
+        },
+        "confirmationDataOperations": {
+          "taxYearCancel": true,
+          "taxYearReset": true,
+          "filingStatusCancel": true,
+          "filingStatusClearChildren": true
+        }
+      },
+      "browserSmokeTests": {
+        "browser": "Google Chrome",
+        "version": "157.0.8103.80",
+        "platform": "macOS",
+        "control": "native Chrome through Computer Use",
+        "scenarioData": "synthetic only",
+        "mode": "default English multi-question flow",
+        "candidateAsset": "fastLinkJS",
+        "completeApplicationBrowserSuiteExecuted": false,
+        "stepsToResults": 5,
+        "conditionalQuestionsAndRequiredFieldRecovery": "passed",
+        "resultsDisplayed": "passed",
+        "resultsAfterReload": "passed",
+        "childCreationAndAnswers": "passed",
+        "secondChildRemovalAndReloadPreserveFirst": "passed",
+        "filingStatusCancelPreservesJointStatusAndChild": "passed",
+        "filingStatusConfirm": "single selected; prior child answers and title cleared; under-25 single branch creates a fresh blank child",
+        "taxYearCancel": "2026 and prior screening answers retained after reload",
+        "taxYearConfirm": "2025 selected; prior screening answers cleared",
+        "rejectedEditNavigation": {
+          "acceptedSelfEmploymentGrossIncome": 12000,
+          "rejectedReplacement": -1,
+          "inlineErrorShown": true,
+          "unrelatedExpenseEdit": 100,
+          "nextStillNavigatesToChildren": true,
+          "incomeAfterReturnAndReload": 12000,
+          "expenseAfterReturnAndReload": 100,
+          "correctedIncome": 13000,
+          "resultsReachedAfterCorrection": true,
+          "classification": "Existing application navigation handler does not gate current input errors; candidate correctly retains accepted value."
+        },
+        "brokenIncomeEditLink": {
+          "linkText": "Edit income and adjustments",
+          "destination": "/app/eitc/income/",
+          "browserOutcome": "404 File not found",
+          "generatedIncomePage": "/app/eitc/agi/",
+          "source": "src/main/resources/credit-assistant/flow/results.xml:103,110",
+          "classification": "Existing hardcoded application route mismatch; independent of Fact Graph version."
+        }
+      }
+    },
+    "directFileBackend": {
+      "mainAndTestCompilation": "passed",
+      "testsExecuted": false,
+      "packaging": "blocked by existing Spotless violation in src/test/java/gov/irs/directfile/api/util/base/BaseRepositoryTest.java; reproduced with CI-pinned baseline"
+    },
+    "directFileFrontend": {
+      "dropInCompatible": false,
+      "fullFrontendSuiteExecuted": false,
+      "reason": "Existing digest constructor, GraphFactory.apply(dictionary,persister), and save() contracts differ from both 3.1 baselines and candidate"
+    },
+    "typeScriptTaxAdvisor": {
+      "tests": 329,
+      "failures": 0,
+      "skippedRealRedisMethods": 28,
+      "typecheck": "passed",
+      "lint": "passed",
+      "productionBuild": "passed",
+      "mcpCheck": "passed against candidate Java service using Jedis-Mock",
+      "redisBackend": "ioredis-mock 8.13.1 with test-only vendored MIT rxi/json.lua 0.1.2 codec and error-reply prelude",
+      "redisMockMethods": 28,
+      "redisGeneratedCases": 9000,
+      "persistenceTestsPassed": 53,
+      "productionLuaScriptsChanged": false,
+      "explicitRealEndpoint": "TEST_REDIS_URL additionally runs the same contracts on real Redis; CI retains this layer",
+      "workingTreePersistenceRun": "passed: 53 methods, including 28 mock-backed methods and 9000 generated cases; optional real-Redis methods not selected"
+    }
+  },
+  "javaProbes": {
+    "baseline": {
+      "label": "baseline",
+      "javaConfigLinked": true,
+      "rejectedWrite": {
+        "rejected": true,
+        "afterSecondSave": -1,
+        "secondSaveSucceeded": true,
+        "beforeSecondSave": 100
+      },
+      "actualDirectFileHelper": {
+        "hasViolations": false,
+        "savedValue": -1
+      },
+      "syncReportedRemovalStillPersisted": 0,
+      "lowercaseWarnFixture": "loaded"
+    },
+    "pinned-baseline": {
+      "label": "pinned-baseline",
+      "javaConfigLinked": true,
+      "rejectedWrite": {
+        "secondSaveSucceeded": true,
+        "beforeSecondSave": 100,
+        "rejected": true,
+        "afterSecondSave": -1
+      },
+      "actualDirectFileHelper": {
+        "hasViolations": false,
+        "savedValue": -1
+      },
+      "syncReportedRemovalStillPersisted": 0,
+      "lowercaseWarnFixture": "loaded"
+    },
+    "candidate-fixed": {
+      "label": "candidate-fixed",
+      "javaConfigLinked": true,
+      "rejectedWrite": {
+        "secondSaveSucceeded": true,
+        "afterSecondSave": 100,
+        "rejected": true,
+        "beforeSecondSave": 100
+      },
+      "actualDirectFileHelper": {
+        "hasViolations": false,
+        "savedValue": null
+      },
+      "syncReportedRemovalStillPersisted": 0,
+      "lowercaseWarnFixture": "loaded"
+    },
+    "candidate-old-java-adapter": {
+      "label": "candidate-old-java-adapter",
+      "javaConfigLinked": true,
+      "rejectedWrite": {
+        "secondSaveSucceeded": true,
+        "afterSecondSave": 100,
+        "rejected": true,
+        "beforeSecondSave": 100
+      },
+      "actualDirectFileHelper": {
+        "hasViolations": false,
+        "savedValue": null
+      },
+      "syncReportedRemovalStillPersisted": 0,
+      "lowercaseWarnFixture": "loaded"
+    }
+  },
+  "javascriptProbes": {
+    "direct-file-bundled": {
+      "label": "direct-file-bundled",
+      "actualDirectFileFourArgumentDigest": {
+        "loaded": true
+      },
+      "directFileRestoration": {
+        "complete": true,
+        "value": 314159
+      },
+      "explicitFromJSON": {
+        "supported": false
+      },
+      "saveReturnShape": {
+        "valid": true,
+        "limitViolations": true,
+        "keys": [
+          "valid",
+          "limitViolations"
+        ]
+      },
+      "directXMLTaxDictionary": {
+        "supported": false
+      },
+      "lowercaseWarnFixture": {
+        "supported": false
+      }
+    },
+    "baseline": {
+      "label": "baseline",
+      "actualDirectFileFourArgumentDigest": {
+        "error": "Cannot read properties of undefined (reading 'typeName')"
+      },
+      "directFileRestoration": {
+        "complete": false,
+        "value": null
+      },
+      "explicitFromJSON": {
+        "supported": true,
+        "complete": true,
+        "value": 314159
+      },
+      "saveReturnShape": {
+        "error": "fg.GraphFactory.apply(...).save is not a function"
+      },
+      "directXMLTaxDictionary": {
+        "supported": true,
+        "complete": true,
+        "hasValue": true,
+        "value": true,
+        "paths": 3046
+      },
+      "lowercaseWarnFixture": {
+        "loaded": true
+      }
+    },
+    "pinned-baseline": {
+      "label": "pinned-baseline",
+      "actualDirectFileFourArgumentDigest": {
+        "error": "Cannot read properties of undefined (reading 'typeName')"
+      },
+      "directFileRestoration": {
+        "complete": false,
+        "value": null
+      },
+      "explicitFromJSON": {
+        "supported": true,
+        "complete": true,
+        "value": 314159
+      },
+      "saveReturnShape": {
+        "error": "fg.GraphFactory.apply(...).save is not a function"
+      },
+      "directXMLTaxDictionary": {
+        "supported": true,
+        "complete": true,
+        "hasValue": true,
+        "value": true,
+        "paths": 3046
+      },
+      "lowercaseWarnFixture": {
+        "loaded": true
+      }
+    },
+    "candidate-fixed": {
+      "label": "candidate-fixed",
+      "actualDirectFileFourArgumentDigest": {
+        "error": "Cannot read properties of undefined (reading 'typeName')"
+      },
+      "directFileRestoration": {
+        "complete": false,
+        "value": null
+      },
+      "explicitFromJSON": {
+        "supported": true,
+        "complete": true,
+        "value": 314159
+      },
+      "saveReturnShape": {
+        "error": "fg.GraphFactory.apply(...).save is not a function"
+      },
+      "directXMLTaxDictionary": {
+        "supported": true,
+        "complete": true,
+        "hasValue": true,
+        "value": true,
+        "paths": 3046
+      },
+      "lowercaseWarnFixture": {
+        "loaded": true
+      }
+    }
+  },
+  "unmodifiedLegacyReturnReplay": {
+    "baseline": {
+      "cases": 161,
+      "loadErrors": 161,
+      "roundtripFailures": 0,
+      "differentFromCandidate": 0
+    },
+    "pinned-baseline": {
+      "cases": 161,
+      "loadErrors": 161,
+      "roundtripFailures": 0,
+      "differentFromCandidate": 0
+    },
+    "candidate-fixed": {
+      "cases": 161,
+      "loadErrors": 161,
+      "roundtripFailures": 0,
+      "differentFromCandidate": 0
+    }
+  },
+  "experimentalEnumNormalizedReplay": {
+    "qualification": "diagnostic migration experiment only; original fixture files unchanged",
+    "normalization": "EnumWrapper.item.value: [] -> null, [string] -> string; 3005 values transformed",
+    "results": {
+      "baseline": {
+        "cases": 161,
+        "loaded": 160,
+        "roundtripFailures": 0,
+        "differentFromCandidate": 0
+      },
+      "pinned-baseline": {
+        "cases": 161,
+        "loaded": 160,
+        "roundtripFailures": 0,
+        "differentFromCandidate": 0
+      },
+      "candidate-fixed": {
+        "cases": 161,
+        "loaded": 160,
+        "roundtripFailures": 0,
+        "differentFromCandidate": 0
+      }
+    },
+    "evaluatedPaths": [
+      "/finalTaxAmount",
+      "/totalTax",
+      "/agi",
+      "/flowIncomplete"
+    ],
+    "remainingLoadFailure": "8862-ctc-no-eitc.json: IllegalArgumentException on all three versions",
+    "completeResultsPerEvaluatedPath": 160,
+    "completeResultsAcrossFourPaths": 640
+  },
+  "candidateRegressionsFixed": [
+    "Case-insensitive XML Error/Warn spelling matches existing Java loader",
+    "Dictionary cleanup removals survive rollback of another retained value"
+  ],
+  "releaseVerdict": "Passed the exercised Java tax-advisor (131 methods), TypeScript TaxAdvisor (329 methods), TWE, and EITC tests. Redis emulator contracts, Redis-backed graph reconstruction, packaged MCP runtime and application-restart restoration passed. Real Redis infrastructure qualification remains separate. Existing consumer navigation/display/link limitations remain. Direct File backend functional qualification remains incomplete; legacy frontend and unmodified saved returns are not drop-in compatible.",
+  "applicationJavascriptLimitations": [
+    "Chrome smoke run covers synthetic default English multi-question scenarios. Other locales, mobile layouts, PDF generation, optional single-question mode, and exhaustive browser suites were not exercised.",
+    "Session comparisons cover synthetic scenarios, not every saved session or tax calculation. Root-result comparisons include incomplete/provisional values and the recorded unchanged TWE error.",
+    "Existing wildcard display code reads private Scala.js vector fields and truncates to 32 items. Full optimization also breaks private field access and currency detection; reproduced with HEAD baseline. App Makefiles currently copy fastLinkJS.",
+    "Typed Boolean writes persist correctly but return a Scala tuple without the string setter errorType/warnings DTO. This predates candidate. No current MultiEnum declarations were found in these dictionaries; their generic UI handlers were not exercised.",
+    "Chrome confirmed that both applications permit Next while a rejected replacement is visible, using the prior accepted graph value. Returning/reloading restores the accepted value. Existing navigation handlers inspect completeness without gating the active field error.",
+    "EITC results-page income edit links target /app/eitc/income/ and return 404; generated income page is /app/eitc/agi/. Existing flow XML hardcodes those destinations.",
+    "Existing handlers ignore the new warnings field. Introducing Warn limits requires consumer warning UI; the current dictionaries do not exercise that feature."
+  ],
+  "redisQualificationLimits": [
+    "Mocks qualify exercised application Redis commands and state contracts, not production Redis infrastructure.",
+    "Application restart restoration was tested while the mock Redis process remained running. Redis server restart durability, eviction, TLS/auth, failover and cluster routing were not tested.",
+    "The ioredis-mock JSON shim is not lua-cjson parity. Generated intake revisions cover 0..1000000 and budget units 1..1000; exact large-number formatting and TTL rounding require real Redis comparison.",
+    "Source-review gaps recorded in app docs include concurrent deletion during message persistence, fractional rate-limit additions, Java long-version precision, and delete/recreate ABA with reused IDs. No claim of those properties passing is made."
+  ]
+}
